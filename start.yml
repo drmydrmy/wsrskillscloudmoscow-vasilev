@@ -1,0 +1,44 @@
+---
+- hosts: main
+  become : yes
+  tasks: 
+  
+    - name: Install curl
+      apt: 
+        name: curl
+        state: present
+        update_cache: yes
+        
+    - name: Enable UFW
+      community.general.ufw:
+        state: enabled
+        
+    - name: Allow TCP 80
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+        
+    - name: Allow TCP 8888
+      community.general.ufw:
+        rule: allow
+        port: '8888'
+        proto: tcp
+        
+    - name: Allow TCP 1467
+      community.general.ufw:
+        rule: allow
+        port: '1467'
+        proto: tcp
+    
+    - name: Change SSH port
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#Port 22'
+        line: 'Port 1467'
+    
+    - name: Allow key SSH auth
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#PubkeyAuthentication yes'
+        line: 'PubkeyAuthentication yes'    
