@@ -1,10 +1,12 @@
 ---
 - hosts: main
   become: yes
-  vars_files:
-    - Users/privvars.yml
     
   tasks: 
+    
+    - name: Include
+      include_vars:
+        file: Users/privvars.yml
     
     - name: Install curl
       apt: 
