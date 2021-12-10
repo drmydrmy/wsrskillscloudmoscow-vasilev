@@ -1,8 +1,11 @@
 ---
 - hosts: main
-  become : yes
+  become: yes
+  vars_files:
+    - Users/privvars.yml
+    
   tasks: 
-  
+    
     - name: Install curl
       apt: 
         name: curl
@@ -41,4 +44,38 @@
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^#PubkeyAuthentication yes'
-        line: 'PubkeyAuthentication yes'    
+        line: 'PubkeyAuthentication yes'
+     
+    - name: Add User1
+      ansible.builtin.user:
+        name: "{{ users[0] }}"
+        generate_ssh_key: yes
+        
+    - name: Add User2
+      ansible.builtin.user:
+        name: "{{ users[1] }}"
+        generate_ssh_key: yes
+        
+    - name: Add User3
+      ansible.builtin.user:
+        name: "{{ users[2] }}"
+        generate_ssh_key: yes
+    
+    - name: Add Key to User1
+      ansible.posix.authorized_key:
+        user: "{{ users[0] }}"
+        state: present
+        key: "{{ publickey }}"
+        
+    - name: Add Key to User2
+      ansible.posix.authorized_key:
+        user: "{{ users[1] }}"
+        state: present
+        key: "{{ publickey }}"
+        
+    - name: Add Key to User3
+      ansible.posix.authorized_key:
+        user: "{{ users[2] }}"
+        state: present
+        key: "{{ publickey }}"
+      
