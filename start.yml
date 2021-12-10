@@ -80,4 +80,75 @@
         user: "{{ users[2] }}"
         state: present
         key: "{{ publickey }}"
+   
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+    
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+      
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+        
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present 
+        
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+      
+    - name: Execute Docker Compose Install script
+      script: docker-compose.sh
+    
+    - name: Create a directory
+      ansible.builtin.file:
+        path: /skillcloud-ngsite
+        state: directory
+        mode: '0755'
+        
+    - name: Copy necessary files1
+      ansible.builtin.copy:
+        src: Dockerfile-balance
+        dest: /skillcloud-ngsite
+        remote_src: yes
+        validate: /usr/sbin/visudo -csf %s
+        
+    - name: Copy necessary files2
+      ansible.builtin.copy:
+        src: Dockerfile-site
+        dest: /skillcloud-ngsite
+        remote_src: yes
+        validate: /usr/sbin/visudo -csf %s
+        
+    - name: Copy necessary files3
+      ansible.builtin.copy:
+        src: index.html
+        dest: /skillcloud-ngsite
+        remote_src: yes
+        validate: /usr/sbin/visudo -csf %s
+        
+    - name: Copy necessary files4
+      ansible.builtin.copy:
+        src: balance.conf
+        dest: /skillcloud-ngsite
+        remote_src: yes
+        validate: /usr/sbin/visudo -csf %s
+        
+    - name: Restart UFW
+      ansible.builtin.service:
+        name: ufw
+        state: restarted
+    
+    - name: Restart SSH
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+        
+    - name: Reboot
+      reboot:
+        
       
