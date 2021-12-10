@@ -114,28 +114,24 @@
       ansible.builtin.copy:
         src: Dockerfile-balance
         dest: /skillcloud-ngsite
-        remote_src: yes
         validate: /usr/sbin/visudo -csf %s
         
     - name: Copy necessary files2
       ansible.builtin.copy:
         src: Dockerfile-site
         dest: /skillcloud-ngsite
-        remote_src: yes
         validate: /usr/sbin/visudo -csf %s
         
     - name: Copy necessary files3
       ansible.builtin.copy:
         src: index.html
         dest: /skillcloud-ngsite
-        remote_src: yes
         validate: /usr/sbin/visudo -csf %s
         
     - name: Copy necessary files4
       ansible.builtin.copy:
         src: balance.conf
         dest: /skillcloud-ngsite
-        remote_src: yes
         validate: /usr/sbin/visudo -csf %s
         
     - name: Restart UFW
