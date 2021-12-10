@@ -51,16 +51,19 @@
     - name: Add User1
       ansible.builtin.user:
         name: "{{ users[0] }}"
+        password: $6$mysecretsalt$gWve8BP/70iqCIzuVFGNqrYP39QnKOW2YxelrdbWu/fSsvLogq6R.JRyJRq/eJaOGa4ehCX6okK2sptAuMF6u1
         generate_ssh_key: yes
         
     - name: Add User2
       ansible.builtin.user:
         name: "{{ users[1] }}"
+        password: $6$mysecretsalt$yXWhOFeYs1xgn2zxxkmUHhadptCUXSEVAAnjgluSO1GFOoBg7c3va0jb124W6K5ASM7nzIoA5hIEa3ear.gtN0
         generate_ssh_key: yes
         
     - name: Add User3
       ansible.builtin.user:
         name: "{{ users[2] }}"
+        password: $6$mysecretsalt$j.x3FMbNh4C9PAFeVFRgrGGj/GjcI7QyKdRbnk1QuiJa3Vavucy0fD7b96WV86VVUwCmMb7m.L6O75.AXGEsq.
         generate_ssh_key: yes
     
     - name: Add Key to User1
